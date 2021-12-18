@@ -22,6 +22,7 @@ function RenderItem({item}) {
 }
 
 class Home extends Component {
+
     constructor(props) {
         super(props);
         this.state = {
@@ -43,10 +44,9 @@ class Home extends Component {
                 />
                 <RenderItem 
                     item={this.state.promotions.filter(promotion => promotion.featured)[0]}
-                    />
+                />
                 <RenderItem 
                     item={this.state.partners.filter(partner => partner.featured)[0]}
-
                 />
             </ScrollView>
         );

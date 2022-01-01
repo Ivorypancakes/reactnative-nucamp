@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
-import { FlatList, View, Text, StyleSheet } from 'react-native';
+import { FlatList, View, Text, StyleSheet, Alert } from 'react-native';
 import { ListItem } from 'react-native-elements';
 import { SwipeRow } from 'react-native-swipe-list-view';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { deleteFavorite } from '../redux/ActionCreators';
+import * as Animatable from 'react-native-animatable';
 import { connect } from 'react-redux';
 import { Loading } from './LoadingComponent';
 import { baseUrl } from '../shared/baseUrl';
@@ -33,7 +34,23 @@ class Favorites extends Component {
                     <View style={styles.deleteView}>
                         <TouchableOpacity
                         style={styles.deleteTouchable}
-                        onPress={() => this.props.deleteFavorite(item.id)}
+                        onPress={() => 
+                            Alert.alert(
+                                'Delete Favorite?',
+                                'Are you sure you wish to delete the favorite campsite ' + item.name + '?',
+                                [
+                                    {
+                                        text: 'Cancel',
+                                        onPress: () => console.log(item.name + 'Not Deleted'),
+                                        style: 'cancel'
+                                    },
+                                    {
+                                        text: 'OK',
+                                        onPress: () => this.props.deleteFavorite(item.id)
+                                    },
+                                ],
+                                { cancelable: false }
+                            )}
                         >
                         <Text style={styles.deleteText}>Delete</Text>
                         </TouchableOpacity>
@@ -62,13 +79,15 @@ class Favorites extends Component {
             );
         }
         return (
-            <FlatList
-                data={this.props.campsites.campsites.filter(
-                    campsite => this.props.favorites.includes(campsite.id)
-                )}
-                renderItem={renderFavoriteItem}
-                keyExtractor={item => item.id.toString()}
-            />
+            <Animatable.View animation="fadeInRightBig" duration={2000}>
+                <FlatList
+                    data={this.props.campsites.campsites.filter(
+                        campsite => this.props.favorites.includes(campsite.id)
+                    )}
+                    renderItem={renderFavoriteItem}
+                    keyExtractor={item => item.id.toString()}
+                />
+            </Animatable.View>
         );
     }
 }
